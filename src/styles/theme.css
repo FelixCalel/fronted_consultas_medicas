@@ -1,0 +1,187 @@
+:root{
+  --brand-50:#ecfeff;
+  --brand-100:#cffafe;
+  --brand-200:#a5f3fc;
+  --brand-300:#67e8f9;
+  --brand-400:#22d3ee;
+  --brand-500:#06b6d4;
+  --brand-600:#0ea5a6; /* primary */
+  --brand-700:#0f766e;
+  --brand-800:#115e59;
+
+  --accent-600:#6366f1;
+  --success-600:#16a34a;
+  --danger-600:#dc2626;
+  --warning-600:#d97706;
+
+  --bg:#0b1220;
+  --bg-soft:#0f172a;
+  --card:#0b1324;
+  --surface:#0e1a2f;
+  --text:#e5f0ff;
+  --muted:#9fb3c8;
+  --border:#1f2b45;
+  --shadow:0 20px 60px -20px rgba(0,0,0,.45);
+}
+
+*{ box-sizing:border-box }
+html,body,#root{ height:100% }
+html,body{ margin:0; background:linear-gradient(180deg, #07101f 0%, #0b1526 100%); color:var(--text); font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"; }
+
+/* Generic UI */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:.8rem 1rem; border-radius:14px; border:1px solid transparent;
+  font-weight:600; cursor:pointer; transition:all .2s ease; gap:.5rem;
+  background:var(--surface); color:var(--text);
+  box-shadow:var(--shadow);
+}
+.btn:hover{ transform:translateY(-1px); }
+.btn:active{ transform:translateY(0); }
+.btn-primary{ background:linear-gradient(135deg, var(--brand-600), var(--accent-600)); border-color:#2d3a73 }
+.btn-secondary{ background:linear-gradient(135deg, var(--brand-700), var(--brand-800)); }
+.btn-outline{ background:transparent; border-color:var(--border) }
+.btn-ghost{ background:transparent; border-color:transparent; color:var(--muted) }
+.link{ background:transparent; color:var(--brand-200); border:none; cursor:pointer; font-weight:600; padding:.1rem .25rem }
+.link:hover{ text-decoration:underline }
+
+.alert{
+  background: rgba(220,38,38,.12);
+  border:1px solid rgba(220,38,38,.35);
+  color:#fecaca; padding:.75rem 1rem; border-radius:12px; margin:.75rem 0;
+}
+
+/* Auth page */
+.auth-page{
+  display:grid; place-items:center; min-height:100%;
+  padding:2rem; background:
+    radial-gradient(800px 300px at 10% 10%, rgba(14,165,166,.25), transparent 60%),
+    radial-gradient(600px 260px at 90% 20%, rgba(99,102,241,.18), transparent 65%);
+}
+.auth-card{
+  position:relative;
+  width:min(1100px, 95vw);
+  /* Altura flexible: ocupa alto de la pantalla pero sin pasarse */
+  height: min(90vh, 780px);
+  border:1px solid var(--border);
+  border-radius:28px;
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+  overflow: hidden; /* se mantiene para la animación horizontal */
+  box-shadow:var(--shadow);
+}
+
+/* contenedor que se desliza: ocupa toda la altura disponible */
+.auth-panels{
+  position:absolute; inset:0; display:flex; width:200%;
+  transition: transform .6s cubic-bezier(.2,.8,.2,1);
+  /* height:100% si lo estás usando */
+}
+.auth-panels.show-login{ transform: translateX(0%) }
+.auth-panels.show-register{ transform: translateX(-50%) }
+
+/* Cada panel puede scrollear en Y si el contenido es más alto */
+.panel{
+  width:50%;
+  display:grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap:0;
+  padding:2.2rem;
+  align-items:start;
+  height:100%;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+.panel:last-child{ border-right:none }
+.panel-content{ padding:1.4rem 2rem; display:flex; flex-direction:column; justify-content:center }
+.panel-aside{ padding:1.4rem 2rem; display:flex; flex-direction:column; justify-content:center;
+  background:linear-gradient(180deg, rgba(15,118,110,.2), rgba(17,94,89,.12));
+  border:1px solid rgba(255,255,255,.04); border-radius:20px;
+}
+
+/* Brand */
+.brand{ display:flex; align-items:center; gap:.75rem; margin-bottom:1.2rem }
+.brand-mark{
+  width:36px; height:36px; display:grid; place-items:center; border-radius:10px;
+  background:linear-gradient(135deg, var(--brand-600), var(--accent-600)); font-weight:800;
+  color:white; box-shadow:var(--shadow);
+}
+.brand-text{ letter-spacing:.2px }
+
+h1,h2,h3{ margin:.2rem 0 .6rem }
+h2{ font-size:1.8rem }
+h3{ font-size:1.25rem }
+p{ margin:.25rem 0 .75rem }
+.muted{ color:var(--muted) }
+
+.form{ display:grid; gap:.9rem; margin-top:.5rem; }
+label{ display:grid; gap:.4rem; font-weight:600; color:#cfe8ff }
+input{
+  width:100%; background:var(--surface); color:var(--text);
+  border:1px solid var(--border); border-radius:12px; padding:.8rem .9rem; outline:none;
+}
+input:focus{ border-color: var(--brand-400); box-shadow:0 0 0 3px rgba(34,211,238,.2) }
+
+.ghost-cta{ margin-top:1rem; color:var(--muted) }
+.ghost-cta .link{ margin-left:.25rem }
+
+/* Segmented control */
+.select-role{ display:grid; gap:.5rem; margin-top:.25rem }
+.segmented{
+  display:flex; background:rgba(255,255,255,.04); border:1px solid var(--border);
+  border-radius:12px; padding:.25rem;
+}
+.segmented > button{
+  flex:1; border:none; border-radius:10px; padding:.6rem .8rem; cursor:pointer;
+  background:transparent; color:var(--muted); font-weight:700;
+}
+.segmented > button.active{
+  background:linear-gradient(135deg, var(--brand-600), var(--accent-600)); color:white;
+  box-shadow:var(--shadow);
+}
+
+/* Panel aside bullets */
+.bullets{ list-style:none; padding:0; margin:.75rem 0 0; display:grid; gap:.4rem }
+.bullets li::before{ content:'•'; color:var(--brand-300); margin-right:.5rem }
+
+/* Dashboard quick styles */
+.page{ min-height:100% }
+.topbar{
+  display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem 1.25rem;
+  position:sticky; top:0; background:rgba(12,18,32,.6); backdrop-filter: blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.content{ padding:1.5rem; }
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+  border:1px solid var(--border); border-radius:22px; padding:1.25rem; box-shadow:var(--shadow);
+}
+.hero{ display:grid; gap:.75rem; margin: 0 0 1.25rem }
+.hero-actions{ display:flex; gap:.75rem; flex-wrap:wrap }
+.grid{ display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:1rem }
+.kpi{ text-align:center }
+.kpi-value{ font-size:2rem; font-weight:800 }
+.kpi-label{ color:var(--muted) }
+
+/* Responsive */
+@media (max-width: 1100px){
+  .panel{ grid-template-columns: 1fr; }
+  .panel-aside{ display:none; }
+}
+@media (max-width: 720px){
+  .auth-card{ height:auto }
+  .auth-panels{
+    position:relative;
+    width:100%;
+    transform:none !important;
+    display:block;
+    height:auto;
+  }
+  .panel{
+    width:100%;
+    border-right:none;
+    border-bottom:1px dashed rgba(255,255,255,.05);
+    padding:1.5rem;
+    height:auto;
+    overflow:visible;
+  }
+}
