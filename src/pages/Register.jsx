@@ -78,19 +78,7 @@ export default function Register() {
               required
             />
           </div>
-          <div className="mb-3">
-            <label className="form-label">Rol</label>
-            <select
-              name="role"
-              className="form-select"
-              value={form.role}
-              onChange={handleChange}
-            >
-              <option value="paciente">Paciente</option>
-              <option value="doctor">Doctor</option>
-              <option value="admin">Administrador</option>
-            </select>
-          </div>
+        
           <button type="submit" className="btn btn-success w-100">
             Registrarse
           </button>

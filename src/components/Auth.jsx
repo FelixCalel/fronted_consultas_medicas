@@ -166,15 +166,6 @@ export default function Auth() {
                   />
                 </label>
 
-                <div className="select-role">
-                  <span>Rol</span>
-                  <div className="segmented">
-                    <button type="button" className={registerForm.role === 'paciente' ? 'active' : ''} onClick={() => setRegisterForm({ ...registerForm, role: 'paciente' })}>Paciente</button>
-                    <button type="button" className={registerForm.role === 'medico' ? 'active' : ''}   onClick={() => setRegisterForm({ ...registerForm, role: 'medico' })}>Médico</button>
-                    <button type="button" className={registerForm.role === 'admin' ? 'active' : ''}    onClick={() => setRegisterForm({ ...registerForm, role: 'admin' })}>Admin</button>
-                  </div>
-                </div>
-
                 <button className="btn btn-primary" type="submit" disabled={loading}>
                   {loading ? 'Creando…' : 'Crear cuenta'}
                 </button>
