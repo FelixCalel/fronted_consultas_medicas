@@ -1,0 +1,283 @@
+/* =========================
+   🔷 Variables de color
+   ========================= */
+:root {
+  --brand-50:#ecfeff;
+  --brand-100:#cffafe;
+  --brand-200:#a5f3fc;
+  --brand-300:#67e8f9;
+  --brand-400:#22d3ee;
+  --brand-500:#06b6d4;
+  --brand-600:#0ea5a6; /* primary */
+  --brand-700:#0f766e;
+  --brand-800:#115e59;
+
+  --accent-600:#6366f1;
+  --success-600:#16a34a;
+  --danger-600:#dc2626;
+  --warning-600:#d97706;
+
+  --bg:#0b1220;
+  --bg-soft:#0f172a;
+  --card:#0b1324;
+  --surface:#0e1a2f;
+  --text:#e5f0ff;
+  --muted:#9fb3c8;
+  --border:#1f2b45;
+  --shadow:0 20px 60px -20px rgba(0,0,0,.45);
+}
+
+/* =========================
+   🔷 Estilos globales
+   ========================= */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #07101f 0%, #0b1526 100%);
+  color: var(--text);
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  overflow-y: auto;
+}
+
+/* =========================
+   🔷 Contenedor principal
+   ========================= */
+.dashboard-container {
+  max-width: 900px;
+  width: 100%;
+  padding: 30px;
+  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Acento decorativo */
+.dashboard-container::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, var(--brand-600), var(--accent-600));
+  border-radius: 50%;
+  opacity: 0.15;
+}
+
+/* =========================
+   🔷 Título principal
+   ========================= */
+.dashboard-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: var(--brand-100);
+  font-weight: 700;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.dashboard-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(to right, var(--brand-600), var(--accent-600));
+  border-radius: 2px;
+}
+
+/* =========================
+   🔷 Secciones
+   ========================= */
+section {
+  margin-bottom: 25px;
+  padding: 20px;
+  border-radius: 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0,0,0,0.35);
+}
+
+/* =========================
+   🔷 Títulos de sección
+   ========================= */
+h2 {
+  color: var(--brand-200);
+  margin-bottom: 15px;
+  font-weight: 700;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2::before {
+  content: "";
+  width: 6px;
+  height: 20px;
+  background: linear-gradient(to bottom, var(--brand-600), var(--accent-600));
+  border-radius: 3px;
+}
+
+/* =========================
+   🔷 Texto
+   ========================= */
+p, li, label, input, textarea {
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* =========================
+   🔷 Botones
+   ========================= */
+.actions-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.actions-section button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, var(--brand-600), var(--accent-600));
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+}
+
+.actions-section button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, var(--brand-700), var(--accent-600));
+}
+
+/* =========================
+   🔷 Formularios
+   ========================= */
+.form-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-section input,
+.form-section textarea,
+.form-section select {
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background-color: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-section input:focus,
+.form-section textarea:focus,
+.form-section select:focus {
+  outline: none;
+  border-color: var(--brand-400);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .2);
+}
+
+.form-section button {
+  align-self: flex-start;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--success-600), var(--brand-600));
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+}
+
+.form-section button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, var(--success-600), var(--accent-600));
+}
+
+/* =========================
+   🔷 Tablas
+   ========================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  color: var(--text);
+}
+
+table th {
+  background: linear-gradient(to right, var(--brand-600), var(--accent-600));
+  color: white;
+  text-align: left;
+  padding: 12px 15px;
+}
+
+table td {
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--border);
+}
+
+table tr:hover {
+  background-color: rgba(34, 211, 238, 0.06);
+}
+
+/* =========================
+   🔷 Animaciones
+   ========================= */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+section {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+section:nth-child(1) { animation-delay: 0.1s; }
+section:nth-child(2) { animation-delay: 0.2s; }
+section:nth-child(3) { animation-delay: 0.3s; }
+section:nth-child(4) { animation-delay: 0.4s; }
+
+/* =========================
+   🔷 Responsivo
+   ========================= */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 20px;
+  }
+
+  .dashboard-title {
+    font-size: 1.7rem;
+  }
+
+  .actions-section {
+    flex-direction: column;
+  }
+
+  .actions-section button {
+    width: 100%;
+  }
+}
