@@ -6,9 +6,8 @@ export default function Register() {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    phone: "",
     password: "",
-    role: "paciente",
+    role: "PATIENT",
   });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -24,7 +23,10 @@ export default function Register() {
       await axios.post("/api/auth/register", form);
       navigate("/login");
     } catch (err) {
-      setError("Error al registrar. Intente nuevamente.");
+      setError(
+        err?.response?.data?.message ||
+          "Error al registrar. Intente nuevamente."
+      );
     }
   };
 
@@ -57,17 +59,6 @@ export default function Register() {
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">Teléfono</label>
-            <input
-              type="tel"
-              name="phone"
-              className="form-control"
-              value={form.phone}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
             <label className="form-label">Contraseña</label>
             <input
               type="password"
@@ -78,7 +69,7 @@ export default function Register() {
               required
             />
           </div>
-        
+
           <button type="submit" className="btn btn-success w-100">
             Registrarse
           </button>

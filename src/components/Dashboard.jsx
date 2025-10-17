@@ -1,6 +1,15 @@
-import React from 'react'
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { clearSession } from "../services/auth";
 
-export default function Dashboard(){
+export default function Dashboard() {
+  const navigate = useNavigate();
+
+  const logout = () => {
+    clearSession();
+    navigate("/login");
+  };
+
   return (
     <div className="page page-dashboard">
       <header className="topbar">
@@ -11,15 +20,25 @@ export default function Dashboard(){
           </div>
         </div>
         <nav className="top-actions">
-          <button className="btn btn-secondary">Nueva cita</button>
-          <button className="btn btn-ghost">Cerrar sesión</button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => navigate("/home")}
+          >
+            Volver al Home
+          </button>
+          <button className="btn btn-ghost" onClick={logout}>
+            Cerrar sesión
+          </button>
         </nav>
       </header>
 
       <main className="content">
         <section className="card hero">
           <h1>Bienvenido/a</h1>
-          <p>Gestiona tus citas médicas con una experiencia moderna, rápida y segura.</p>
+          <p>
+            Gestiona tus citas médicas con una experiencia moderna, rápida y
+            segura.
+          </p>
           <div className="hero-actions">
             <button className="btn btn-primary">Agendar cita</button>
             <button className="btn btn-outline">Ver calendario</button>
@@ -42,5 +61,5 @@ export default function Dashboard(){
         </section>
       </main>
     </div>
-  )
+  );
 }
