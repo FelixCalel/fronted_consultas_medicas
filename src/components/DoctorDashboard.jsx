@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { searchPatients } from "../services/patients";
 import { getSession } from "../services/auth";
 import {
+  createAppointment,
   listDoctorAppointments,
   updateAppointmentStatus,
   listBlockedSlots,
@@ -25,6 +27,18 @@ export default function DoctorDashboard() {
     note: "",
   });
   const [savingBlock, setSavingBlock] = useState(false);
+
+  const [patientQuery, setPatientQuery] = useState("");
+  const [patientOptions, setPatientOptions] = useState([]);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [loadingPatients, setLoadingPatients] = useState(false);
+  const [apptForm, setApptForm] = useState({
+    date: new Date().toISOString().slice(0, 10),
+    time: "",
+    reason: "",
+  });
+  const [savingAppt, setSavingAppt] = useState(false);
+  const [apptMsg, setApptMsg] = useState("");
 
   const inDate = (a) => a.date === date;
   const matchesQ = (a) => {
@@ -51,14 +65,16 @@ export default function DoctorDashboard() {
     })();
   }, [date, doctorId]);
 
+  // Asegurar que list siempre sea un array
+  const safeList = Array.isArray(list) ? list : [];
   const stats = useMemo(
     () => ({
-      pendientes: list.filter((a) => a.status === "pendiente").length,
-      confirmadas: list.filter((a) => a.status === "confirmada").length,
-      atendidas: list.filter((a) => a.status === "atendida").length,
-      canceladas: list.filter((a) => a.status === "cancelada").length,
+      pendientes: safeList.filter((a) => a.status === "pendiente").length,
+      confirmadas: safeList.filter((a) => a.status === "confirmada").length,
+      atendidas: safeList.filter((a) => a.status === "atendida").length,
+      canceladas: safeList.filter((a) => a.status === "cancelada").length,
     }),
-    [list]
+    [safeList]
   );
 
   const setStatus = async (id, status) => {
@@ -66,12 +82,14 @@ export default function DoctorDashboard() {
     setList((prev) => prev.map((a) => (a.id === id ? updated : a)));
   };
 
+  // Asegurar que blocks siempre sea un array
+  const safeBlocks = Array.isArray(blocks) ? blocks : [];
   const sameDayBlocks = useMemo(
     () =>
-      blocks
+      safeBlocks
         .filter((b) => b.date === blockForm.date)
         .sort((a, b) => a.start.localeCompare(b.start)),
-    [blocks, blockForm.date]
+    [safeBlocks, blockForm.date]
   );
 
   const addBlock = async (e) => {
@@ -118,7 +136,55 @@ export default function DoctorDashboard() {
   };
 
   const fmtTime = (hhmm) => hhmm;
-  const filtered = list.filter(inDate).filter(matchesQ);
+  const filtered = safeList.filter(inDate).filter(matchesQ);
+
+  // Autocompletado de pacientes
+  useEffect(() => {
+    if (patientQuery.length < 2) {
+      setPatientOptions([]);
+      return;
+    }
+    setLoadingPatients(true);
+    searchPatients(patientQuery)
+      .then((res) => setPatientOptions(Array.isArray(res) ? res : []))
+      .catch(() => setPatientOptions([]))
+      .finally(() => setLoadingPatients(false));
+  }, [patientQuery]);
+
+  const handleCreateAppointment = async (e) => {
+    e.preventDefault();
+    setApptMsg("");
+    if (!selectedPatient) {
+      setApptMsg("Selecciona un paciente");
+      return;
+    }
+    if (!apptForm.date || !apptForm.time || !apptForm.reason) {
+      setApptMsg("Completa todos los campos");
+      return;
+    }
+    setSavingAppt(true);
+    try {
+      await createAppointment({
+        patientId: selectedPatient.id,
+        doctorId,
+        date: apptForm.date,
+        time: apptForm.time,
+        reason: apptForm.reason,
+      });
+      setApptMsg("Cita agendada correctamente");
+      setApptForm({
+        date: new Date().toISOString().slice(0, 10),
+        time: "",
+        reason: "",
+      });
+      setSelectedPatient(null);
+      setPatientQuery("");
+    } catch (e) {
+      setApptMsg(e?.message || "Error al agendar cita");
+    } finally {
+      setSavingAppt(false);
+    }
+  };
 
   return (
     <div className="content content--doctor">
@@ -136,13 +202,61 @@ export default function DoctorDashboard() {
             onChange={(e) => setDate(e.target.value)}
             className="input"
           />
-          <input
-            type="search"
-            placeholder="Buscar paciente / motivo / estado…"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            className="input"
-          />
+          <div style={{ position: "relative", width: 260 }}>
+            <input
+              type="search"
+              placeholder="Buscar paciente por nombre, correo o teléfono"
+              value={patientQuery}
+              onChange={(e) => {
+                setPatientQuery(e.target.value);
+                setSelectedPatient(null);
+              }}
+              className="input"
+              autoComplete="off"
+            />
+            {loadingPatients && <div className="dropdown">Buscando…</div>}
+            {patientQuery.length >= 2 &&
+              Array.isArray(patientOptions) &&
+              patientOptions.length > 0 && (
+                <ul
+                  className="dropdown"
+                  style={{
+                    position: "absolute",
+                    zIndex: 10,
+                    width: "100%",
+                    background: "#222",
+                    borderRadius: 4,
+                    margin: 0,
+                    padding: 0,
+                    listStyle: "none",
+                  }}
+                >
+                  {patientOptions.map((p) => (
+                    <li
+                      key={p.id}
+                      style={{ padding: 8, cursor: "pointer" }}
+                      onClick={() => {
+                        setSelectedPatient(p);
+                        setPatientQuery(
+                          p.name + (p.user?.email ? ` (${p.user.email})` : "")
+                        );
+                        setPatientOptions([]);
+                      }}
+                    >
+                      {p.name}{" "}
+                      {p.user?.email && (
+                        <span style={{ color: "#aaa" }}>({p.user.email})</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            {selectedPatient && (
+              <div style={{ color: "#0f0", fontSize: 12, marginTop: 2 }}>
+                Paciente seleccionado: {selectedPatient.name}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
@@ -339,6 +453,70 @@ export default function DoctorDashboard() {
           )}
         </div>
       </section>
+
+      {selectedPatient && (
+        <form
+          onSubmit={handleCreateAppointment}
+          style={{
+            marginTop: 16,
+            background: "#181c24",
+            padding: 16,
+            borderRadius: 8,
+          }}
+        >
+          <div style={{ display: "flex", gap: 8 }}>
+            <input
+              type="date"
+              value={apptForm.date}
+              onChange={(e) =>
+                setApptForm((f) => ({ ...f, date: e.target.value }))
+              }
+              required
+              className="input"
+              style={{ flex: 1 }}
+            />
+            <input
+              type="time"
+              value={apptForm.time}
+              onChange={(e) =>
+                setApptForm((f) => ({ ...f, time: e.target.value }))
+              }
+              required
+              className="input"
+              style={{ flex: 1 }}
+            />
+            <input
+              type="text"
+              placeholder="Motivo de la cita"
+              value={apptForm.reason}
+              onChange={(e) =>
+                setApptForm((f) => ({ ...f, reason: e.target.value }))
+              }
+              required
+              className="input"
+              style={{ flex: 2 }}
+            />
+            <button
+              className="btn btn-primary"
+              type="submit"
+              disabled={savingAppt}
+              style={{ flex: 1 }}
+            >
+              {savingAppt ? "Agendando…" : "Agendar cita"}
+            </button>
+          </div>
+          {apptMsg && (
+            <div
+              style={{
+                color: apptMsg.includes("correctamente") ? "#0f0" : "#f44",
+                marginTop: 8,
+              }}
+            >
+              {apptMsg}
+            </div>
+          )}
+        </form>
+      )}
     </div>
   );
 }

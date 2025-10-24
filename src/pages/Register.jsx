@@ -21,7 +21,7 @@ export default function Register() {
     e.preventDefault();
     setError(null);
     try {
-      await axios.post("/api/auth/register", form);
+      await axios.post("/auth/register", form);
       navigate("/login");
     } catch (err) {
       setError("Error al registrar. Intente nuevamente.");
