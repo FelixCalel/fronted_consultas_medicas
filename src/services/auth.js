@@ -1,11 +1,5 @@
-// src/services/auth.js
 import http from "./http";
 
-/**
- * Intenta login contra API: POST /api/auth/login
- * Si está activado el modo mock (VITE_USE_MOCK_AUTH=true),
- * valida contra credenciales de prueba y genera token local.
- */
 export async function login({ email, password }) {
   const useMock = import.meta.env.VITE_USE_MOCK_AUTH === "true";
 

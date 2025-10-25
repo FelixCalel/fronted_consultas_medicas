@@ -65,7 +65,6 @@ export default function DoctorDashboard() {
     })();
   }, [date, doctorId]);
 
-  // Asegurar que list siempre sea un array
   const safeList = Array.isArray(list) ? list : [];
   const stats = useMemo(
     () => ({
@@ -82,7 +81,6 @@ export default function DoctorDashboard() {
     setList((prev) => prev.map((a) => (a.id === id ? updated : a)));
   };
 
-  // Asegurar que blocks siempre sea un array
   const safeBlocks = Array.isArray(blocks) ? blocks : [];
   const sameDayBlocks = useMemo(
     () =>
@@ -138,7 +136,6 @@ export default function DoctorDashboard() {
   const fmtTime = (hhmm) => hhmm;
   const filtered = safeList.filter(inDate).filter(matchesQ);
 
-  // Autocompletado de pacientes
   useEffect(() => {
     if (patientQuery.length < 2) {
       setPatientOptions([]);

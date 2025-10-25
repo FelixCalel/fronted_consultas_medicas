@@ -7,7 +7,6 @@ export default function Auth() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  // Si ya hay sesión, redirigir a /home
   useEffect(() => {
     const { token } = getSession();
     if (token) {
