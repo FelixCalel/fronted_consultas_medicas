@@ -11,6 +11,7 @@ export default function Register() {
     role: "paciente",
   });
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -20,9 +21,15 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
     try {
-      await axios.post("/auth/register", form);
-      navigate("/login");
+      await axios.post("/api/auth/register", form);
+      setSuccess(
+        "¡Registro exitoso! Se ha enviado un correo de confirmación. Serás redirigido al login."
+      );
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (err) {
       setError("Error al registrar. Intente nuevamente.");
     }
@@ -33,6 +40,7 @@ export default function Register() {
       <div className="card shadow-lg p-4" style={{ width: "500px" }}>
         <h2 className="text-center mb-4">Crear Cuenta</h2>
         {error && <div className="alert alert-danger">{error}</div>}
+        {success && <div className="alert alert-success">{success}</div>}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label">Nombre completo</label>

@@ -54,7 +54,7 @@ export default function Auth() {
     setError("");
     setLoading(true);
     try {
-      await axios.post("/auth/register", registerForm);
+      await axios.post("/api/auth/register", registerForm);
       navigate("/login");
     } catch (err) {
       setError(
